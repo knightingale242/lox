@@ -3,7 +3,17 @@
 #include "debug.h"
 #include "value.h"
 
+//temp function for debugging delete later
+// void printLineArray(LineArray* array){
+//     for (int i =0; i < array->count; i++){
+//         int line = array->lines[i].line;
+//         int start = array->lines[i].start_offset;
+//         int end = array->lines[i].end_offset;
+//     }
+// }
+
 void disassembleChunk(Chunk* chunk, const char* name){
+    // printLineArray(&chunk->line_arr);
     printf("==%s==\n", name);
 
     for (int offset = 0; offset < chunk->count;){
@@ -24,13 +34,28 @@ static int constantInstruction(const char* name, Chunk* chunk, int offset){
     return offset + 2;
 }
 
+int getLine(LineArray* array, int offset){
+    if (offset < 0){
+        return -1;
+    }
+    for (int i = 0; i < array->count; i++){
+        if (array->lines[i].end_offset >= offset){
+            return array->lines[i].line;
+        }
+    }
+    return -1;
+}
+
 int disassembleInstruction(Chunk* chunk, int offset){
     printf("%04d ", offset);
-    if (offset > 0 && chunk->lines[offset] == chunk->lines[offset - 1]){
+
+    int curr_line = getLine(&chunk->line_arr, offset);
+    int prev_line = getLine(&chunk->line_arr, offset - 1); 
+    if (offset > 0 && curr_line == prev_line){
         printf("   | ");
     }
     else{
-        printf("%4d ", chunk->lines[offset]);
+        printf("%4d ", curr_line);
     }
 
     uint8_t instruction = chunk->code[offset];
