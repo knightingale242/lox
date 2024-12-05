@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "chunk.h"
 #include "memory.h"
@@ -81,4 +82,30 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line){
 int addConstant(Chunk* chunk, Value value){
     writeValueArray(&chunk->constants, value);
     return chunk->constants.count - 1;
+}
+
+/*
+just a note on some c things that i learned because of a bug i
+fixed in this code, i was initially passing &chunk into all the
+function calls in here that took chunk and was getting a seg error
+
+after some log statements and thinking i realized that it was a gap
+in my knowledge on pointers, i had already passed &chunk into the invocation
+of this function so i currently have chunk* and if i invoke other functions
+that require the same thing i can just pass chunk and not not &chunk because that
+would be passing in chunk** not chunk* not sure why it did not complain but remember
+this as things get more complex in this code :)
+*/
+void writeConstant(Chunk* chunk, Value value, int line){
+    int index = addConstant(chunk, value);
+    if (index <= 255){
+        writeChunk(chunk, OP_CONSTANT, line);
+        writeChunk(chunk, index, line);
+    }
+    else {
+        writeChunk(chunk, OP_CONSTANT_LONG, line);
+        writeChunk(chunk, (index >> 16) & 0xFF, line);
+        writeChunk(chunk, (index >> 8) & 0xFF, line);
+        writeChunk(chunk, index & 0xFF, line);
+    }
 }
