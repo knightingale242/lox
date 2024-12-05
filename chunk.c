@@ -96,6 +96,20 @@ that require the same thing i can just pass chunk and not not &chunk because tha
 would be passing in chunk** not chunk* not sure why it did not complain but remember
 this as things get more complex in this code :)
 */
+
+/*
+Context: before implementing this we would be limited to having 255 constants
+available to look up because the code only supported adding adding indexes that
+could be represented with one byte. now it can hold up to 16,777,215 now that the
+index is represented with three bytes
+
+complexity is added because the switch is done once we hit the limit and start using new
+opcode and logic will have to be added to handle dissassembling this in the debug file to
+accomodate the new code however it does save space not sure if it is worth it
+
+255 * 2 = 510 bytes or i could just make all constants represented by longs and keep it simple
+the additional complexity is not really on the critical path though. will sleep on it :)
+*/
 void writeConstant(Chunk* chunk, Value value, int line){
     int index = addConstant(chunk, value);
     if (index <= 255){
