@@ -26,6 +26,21 @@ static int simpleInstruction(const char* name, int offset){
     return offset + 1;
 }
 
+int getThreeByteIndex(Chunk* chunk, int offset){
+    int operand = (chunk->code[offset + 1] << 16) |
+                  (chunk->code[offset + 2] << 8)  |
+                  (chunk->code[offset + 3]);
+    return operand; 
+}
+
+constLongInstruction(const char* name, Chunk* chunk, int offset){
+    uint32_t constant = getThreeByteIndex(chunk, offset);
+    printf("%-16s %4d '", name, constant); 
+    printValue(chunk->constants.values[constant]);
+    printf("'\n");
+    return offset + 4;
+}
+
 static int constantInstruction(const char* name, Chunk* chunk, int offset){
     uint8_t constant = chunk->code[offset + 1];
     printf("%-16s %4d '", name, constant);
@@ -64,6 +79,8 @@ int disassembleInstruction(Chunk* chunk, int offset){
             return simpleInstruction("OP_RETURN", offset);
         case OP_CONSTANT:
             return constantInstruction("OP_CONSTANT", chunk, offset);
+        case OP_CONSTANT_LONG:
+            return constLongInstruction("OP_CONSTANT_LONG", chunk, offset);
         default:
             printf("unknown opcode %d\n", instruction);
             return offset + 1;
