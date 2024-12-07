@@ -1,6 +1,8 @@
 #ifndef clox_scanner_h
 #define clox_scanner_h
 
+#include "trie.h"
+
 void initScanner(const char* source);
 Token scanToken();
 
