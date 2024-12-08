@@ -1,10 +1,7 @@
 #ifndef clox_scanner_h
 #define clox_scanner_h
 
-#include "trie.h"
-
 void initScanner(const char* source);
-Token scanToken();
 
 typedef enum{
     //single character tokens
@@ -60,5 +57,24 @@ typedef struct{
     int length;
     int line;
 } Token;
+
+Token scanToken();
+
+typedef struct{
+    char character;
+    bool word_end;
+    TokenType token;
+    struct TrieNode* children[26];
+} TrieNode;
+
+typedef struct{
+    TrieNode* root;
+} Trie;
+
+TrieNode* createTrieNode(char character);
+Trie* createTrie();
+Trie* createKeywordTrie(const char* words[], TokenType tokens[], int num_words);
+void insert(Trie* trie, const char* word, TokenType token);
+TokenType test(Trie* trie, const char* word);
 
 #endif
