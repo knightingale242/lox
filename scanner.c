@@ -9,13 +9,13 @@ typedef struct{
     const char* start;
     const char* current;
     int line;
-    Trie* keyword_trie;
+    struct TrieNode* keyword_trie;
 } Scanner;
 
 Scanner scanner;
 
-TrieNode* createTrieNode(char character){
-    TrieNode* node = (TrieNode*)malloc(sizeof(TrieNode));
+struct TrieNode* createTrieNode(char character){
+    struct TrieNode* node = (struct TrieNode*)malloc(sizeof(struct TrieNode));
     node->character = character;
     node->word_end = false;
     for (int i = 0; i < 26; i++){
@@ -25,17 +25,17 @@ TrieNode* createTrieNode(char character){
     return node;
 }
 
-Trie* createTrie(){
-    Trie* trie = (Trie*)malloc(sizeof(Trie));
-    trie->root = createTrieNode('\0');
+struct TrieNode* createTrie(){
+    struct TrieNode* trie = (struct TrieNode*)malloc(sizeof(struct TrieNode));
+    trie = createTrieNode('\0');
     return trie;
 }
 
 /*
 only takes words that are all lowercase :o
 */
-void insert(Trie* trie, const char* word, TokenType token){
-    TrieNode* temp = trie->root;
+void insert(struct TrieNode* trie, const char* word, TokenType token){
+    struct TrieNode* temp = trie;
     int length = strlen(word);
 
     for(int i = 0; i < length; i++){
@@ -49,8 +49,8 @@ void insert(Trie* trie, const char* word, TokenType token){
     temp->token = token;
 }
 
-Trie* createKeywordTrie(const char* words[], TokenType tokens[], int num_words){
-    Trie* trie = createTrie();
+struct TrieNode* createKeywordTrie(const char* words[], TokenType tokens[], int num_words){
+    struct TrieNode* trie = createTrie();
 
     for (int i = 0; i < num_words; i++){
         insert(trie, words[i], tokens[i]);
@@ -59,8 +59,8 @@ Trie* createKeywordTrie(const char* words[], TokenType tokens[], int num_words){
     return trie;
 }
 
-TokenType test(Trie* trie, const char* word){
-    TrieNode* current = trie->root;
+TokenType test(struct TrieNode* trie, const char* word){
+    struct TrieNode* current = trie;
     int length = strlen(word);
 
     for (int i = 0; i < length; i++){
@@ -187,7 +187,7 @@ static Token string(){
     }
 
     advance();
-    makeToken(TOKEN_STRING);
+    return makeToken(TOKEN_STRING);
 }
 
 static Token number(){
@@ -195,7 +195,7 @@ static Token number(){
         advance();
     }
 
-    if(peek == '.' && isDigit(peekNext())){
+    if(peek() == '.' && isDigit(peekNext())){
         advance();
 
         while(isDigit(peek())){
@@ -226,7 +226,7 @@ void initScanner(const char* source){
     scanner.start = source;
     scanner.current = source;
     scanner.line = 1;
-    scanner.keyword_trie = createKeywordTrie(&keywords, tokens, 16);
+    scanner.keyword_trie = createKeywordTrie(keywords, tokens, 16);
 }
 
 Token scanToken(){

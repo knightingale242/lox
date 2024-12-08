@@ -60,21 +60,17 @@ typedef struct{
 
 Token scanToken();
 
-typedef struct{
+struct TrieNode{
     char character;
     bool word_end;
     TokenType token;
     struct TrieNode* children[26];
-} TrieNode;
+};
 
-typedef struct{
-    TrieNode* root;
-} Trie;
-
-TrieNode* createTrieNode(char character);
-Trie* createTrie();
-Trie* createKeywordTrie(const char* words[], TokenType tokens[], int num_words);
-void insert(Trie* trie, const char* word, TokenType token);
-TokenType test(Trie* trie, const char* word);
+struct TrieNode* createTrieNode(char character);
+struct TrieNode* createTrie();
+struct TrieNode* createKeywordTrie(const char* words[], TokenType tokens[], int num_words);
+void insert(struct TrieNode* trie, const char* word, TokenType token);
+TokenType test(struct TrieNode* trie, const char* word);
 
 #endif
