@@ -53,7 +53,6 @@ void freeLineArray(LineArray* array){
 }
 
 void initChunk(Chunk* chunk){
-    // printf("initializing the chunk :)\n");
     chunk->count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;

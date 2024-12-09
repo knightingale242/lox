@@ -71,11 +71,9 @@ static void errorAtCurrent(const char* message){
 }
 
 static void advance() {
-    // printf("I am advancing :/\n");
     parser.previous = parser.current;
 
     for (;;) {
-        // printf("i am about to scan the token :)\n");
         parser.current = scanToken();
         if (parser.current.type != TOKEN_ERROR) break;
 
@@ -156,7 +154,6 @@ static void binary(){
 }
 
 static void expression(){
-    printf("i am in expression :|\n");
     parsePrecedence(PREC_ASSIGNMENT);
 }
 
@@ -228,7 +225,6 @@ ParseRule rules[] = {
 };
 
 static void parsePrecedence(Precdence precedence){
-    printf("in the parsePrecedence function :)\n");
     advance();
     ParseFn prefixRule = getRule(parser.previous.type)->prefix;
 
@@ -251,12 +247,9 @@ static ParseRule* getRule(TokenType type){
 }
 
 bool compile(const char* source, Chunk* chunk){
-    // printf("I am now compiling :)\n");
-    // printf("the source is currently %s\n", source);
     initScanner(source);
     compiling_chunk = chunk;
     
-    // printf("done initializing the scanner :0\n");
     parser.hadError = false;
     parser.panicMode = false;
 
