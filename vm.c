@@ -84,6 +84,23 @@ static InterpretResult run(){
 }
 
 InterpretResult interpret(const char* source){
-    compile(source);
-    return INTERPRET_OK;
+    // printf("interpreting the line :)\n");
+    // printf("the source is currently %s\n", source);
+    Chunk chunk;
+    initChunk(&chunk);
+    // printf("done initliazing the chunk :)\n");
+    if(!compile(source, &chunk)){
+        freeChunk(&chunk);
+        return INTERPRET_COMPILE_ERROR;
+    }
+
+    // printf("i am done checking compiling and stuff :)\n");
+
+    vm.chunk = &chunk;
+    vm.ip = vm.chunk->code;
+
+    InterpretResult result = run();
+
+    freeChunk(&chunk);
+    return result;
 }

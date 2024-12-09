@@ -92,6 +92,7 @@ static bool isAlpha(char c) {
 }
 
 static char advance(){
+    // printf("i am in another advance function :)\n");
     scanner.current++;
     return scanner.current[-1];
 }
@@ -137,12 +138,15 @@ static Token errorToken(const char* message){
 }
 
 static void skipWhitespace(){
+    // printf("i am in the skipping whitespace function :)\n");
     for(;;){
         char c = peek();
+        // printf("i am done peeking and now hacve the char :)\n");
         switch (c){
             case ' ':
             case '\r':
             case '\t':
+                // printf("just got into a case :)\n");
                 advance();
                 break;
             case '\n':
@@ -213,6 +217,8 @@ static Token identifier(){
 }
 
 void initScanner(const char* source){
+    // printf("I am initializing the scanner :)\n");
+    // printf("the source is: %s\n",source);
     const char* keywords[] = {
         "and", "class", "else", "false", "for", "fun", "if", "nil",
         "or", "print", "return", "super", "this", "true", "var", "while"
@@ -230,17 +236,20 @@ void initScanner(const char* source){
 }
 
 Token scanToken(){
+    // printf("i am scanning the token :)\n");
     skipWhitespace();
     scanner.start = scanner.current;
-
+    // printf("about to look :(\n");
     if(isAtEnd()){
         return makeToken(TOKEN_EOF);
     }
     char c = advance();
+    printf("here is our current thing we are looking at :)'%c'\n", c);
     if (isAlpha(c)){
         return identifier();
     }
-    if (isDigit(peek())){
+    if (isDigit(c)){
+        printf("i am a number :O\n");
         return number();
     }
     switch(c){

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "chunk.h"
 #include "memory.h"
@@ -52,6 +53,7 @@ void freeLineArray(LineArray* array){
 }
 
 void initChunk(Chunk* chunk){
+    // printf("initializing the chunk :)\n");
     chunk->count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;

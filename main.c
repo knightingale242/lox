@@ -39,10 +39,11 @@ static void repl(){
     char line[1024];
     for (;;){
         printf("> ");
-        if(fgets(line, sizeof(line), stdin)){
+        if(!fgets(line, sizeof(line), stdin)){
             printf("\n");
             break;
         }
+        // printf("the line is %s\n", line);
         interpret(line);
     }
 }
