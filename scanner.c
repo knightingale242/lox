@@ -270,6 +270,7 @@ Token scanToken(){
         case '-':
             return makeToken(TOKEN_MINUS);
         case '+':
+            printf("this is addition token :)\n");
             return makeToken(TOKEN_PLUS);
         case '/':
             return makeToken(TOKEN_SLASH);
