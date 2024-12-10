@@ -7,11 +7,6 @@
 #include "debug.h"
 #include "vm.h"
 
-/*
-Useful miscellaneous things
-command to get line count -> git ls-files | grep '\.c' | xargs wc -l
-*/
-
 // int main(int argc, const char* argv[]){
 //     initVM();
 //     Chunk chunk;

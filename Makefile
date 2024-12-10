@@ -29,5 +29,8 @@ $(TARGET): $(OBJ)
 clean:
 	rm -f $(OBJ) $(TARGET)
 
+count:
+	@echo "line count:" && git ls-files | grep '\.c' | xargs wc -l
+
 # Rebuild the entire project
 rebuild: clean all
