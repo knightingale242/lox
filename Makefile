@@ -3,10 +3,10 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g
 
 # Source files
-SRC = main.c chunk.c memory.c debug.c value.c vm.c scanner.c compiler.c
+SRC = main.c chunk.c memory.c debug.c value.c vm.c scanner.c compiler.c object.c
 
 # Header files
-HEADERS = common.h chunk.h memory.h debug.h value.h vm.h scanner.h compiler.h
+HEADERS = common.h chunk.h memory.h debug.h value.h vm.h scanner.h compiler.h object.h
 
 # Object files (one per source file)
 OBJ = $(SRC:.c=.o)

@@ -7,6 +7,13 @@
 #include "debug.h"
 #include "vm.h"
 
+/*
+TODO
+- fix constant table implementation
+    - will just use one constant tag for all bits
+    - i dont think it is worth the trouble for saving a few bits lowkey :/
+*/
+
 // int main(int argc, const char* argv[]){
 //     initVM();
 //     Chunk chunk;

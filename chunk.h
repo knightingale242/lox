@@ -4,6 +4,8 @@
 #include "common.h"
 #include "value.h"
 
+typedef Value Value;
+
 typedef enum {
     OP_CONSTANT,
     OP_NIL,
