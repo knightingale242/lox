@@ -72,6 +72,8 @@ TokenType test(struct TrieNode* trie, const char* word){
     }
 
     if (current->word_end == true){
+        if (current->token == TOKEN_PRINT){
+        }
         return current->token;
     }
     return TOKEN_ERROR;
@@ -164,13 +166,21 @@ static void skipWhitespace(){
     }
 }
 
+char* getSubstring(const char* start, const char* current){
+    size_t length = current - start;
+    char* result = (char*)malloc(length + 1);
+    memcpy(result, start, length);
+    result[length] = '\0';
+    return result;
+}
+
 static TokenType identifierType(){
-    TokenType token = test(scanner.keyword_trie, scanner.current);
+    const char* word = getSubstring(scanner.start, scanner.current);
+    TokenType token = test(scanner.keyword_trie, word);
 
     if (token != TOKEN_ERROR){
         return token;
     }
-
     return TOKEN_IDENTIFIER;
 }
 

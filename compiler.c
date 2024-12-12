@@ -90,6 +90,18 @@ static void consume(TokenType type, const char* message) {
     errorAtCurrent(message);
 }
 
+static bool check(TokenType type){
+    return parser.current.type == type;
+}
+
+static bool match(TokenType type){
+    if(!check(type)){
+        return false;
+    }
+    advance();
+    return true;
+}
+
 Chunk* currentChunk(){
     return compiling_chunk;
 }
@@ -130,6 +142,8 @@ static void endCompiler(){
 }
 
 static void expression();
+static void statement();
+static void declaration();
 static ParseRule* getRule(TokenType token);
 static void parsePrecedence(Precdence precedence);
 
@@ -190,6 +204,22 @@ static void literal(){
 
 static void expression(){
     parsePrecedence(PREC_ASSIGNMENT);
+}
+
+static void printStatement(){
+    expression();
+    consume(TOKEN_SEMICOLON, "Expect ';' after value.");
+    emitByte(OP_PRINT);
+}
+
+static void declaration(){
+    statement();
+}
+
+static void statement(){
+    if (match(TOKEN_PRINT)){
+        printStatement();
+    }
 }
 
 static void grouping(){
@@ -270,14 +300,12 @@ ParseRule rules[] = {
 static void parsePrecedence(Precdence precedence){
     advance();
     ParseFn prefixRule = getRule(parser.previous.type)->prefix;
-
     if (prefixRule == NULL){
         error("Expect Expression.");
         return;
     }
 
     prefixRule();
-
     while(precedence <= getRule(parser.current.type)->precedence){
         advance();
         ParseFn infixRule = getRule(parser.previous.type)->infix;
@@ -297,8 +325,11 @@ bool compile(const char* source, Chunk* chunk){
     parser.panicMode = false;
 
     advance();
-    expression();
-    consume(TOKEN_EOF, "Expect end of expression.");
+
+    while(!match(TOKEN_EOF)){
+        declaration();
+    }
+
     endCompiler();
     return !parser.hadError;
 }
